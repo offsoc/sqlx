@@ -22,6 +22,15 @@ mod prepare;
 
 pub use crate::opt::Opt;
 
+/// Check arguments for `--no-dotenv` _before_ Clap parsing, and apply `.env` if not set.
+pub fn maybe_apply_dotenv() {
+    if std::env::args().any(|arg| arg == "--no-dotenv") {
+        return;
+    }
+
+    dotenvy::dotenv().ok();
+}
+
 pub use sqlx::_unstable::config::{self, Config};
 
 pub async fn run(opt: Opt) -> Result<()> {
